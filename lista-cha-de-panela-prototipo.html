@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chá de Panela Paula & Kathleen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@400;500;600&family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: convite floral no topo, depois a lista em cartões agrupados por cômodo */
+:root{
+  --bg:#FFFDF7; --paper:#FFFFFF; --butter:#FBE7A1; --butter-deep:#E9C75A;
+  --sage:#9FB08A; --ink:#5E5240; --muted:#9A8E78; --line:#F1E6C8; --taken:#F6F2E8;
+  --script:"Great Vibes",cursive; --serif:"Cormorant Garamond",Georgia,serif; --sans:"Nunito Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+@media (max-width:520px){header svg.fl{width:230px!important}header{padding-block:110px 90px}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:880px;margin:0 auto;padding:0 16px 64px}
+.proto{background:var(--butter);color:var(--ink);text-align:center;font-size:13px;padding:8px 16px;font-weight:600}
+
+header{position:relative;text-align:center;padding:90px 16px 80px;overflow:hidden}
+header{background:radial-gradient(ellipse at 10% 0,#FFF3C9 0,transparent 50%),radial-gradient(ellipse at 95% 100%,#FFF1C0 0,transparent 50%)}
+header svg.fl{position:absolute;width:300px;max-width:48%;pointer-events:none}
+header svg.tl{top:-40px;left:-50px}
+header svg.tr{top:-50px;right:-60px;width:220px;transform:scaleX(-1) rotate(10deg)}
+header svg.bl{bottom:-50px;left:-60px;width:200px;transform:rotate(180deg) scaleX(-1)}
+header svg.br{bottom:-50px;right:-50px;transform:rotate(180deg)}
+header>*:not(svg){position:relative;z-index:1}
+.eyebrow{font-family:var(--serif);letter-spacing:.25em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+h1{font-family:var(--script);font-weight:400;font-size:clamp(46px,10vw,72px);line-height:1.1;margin:8px 0 4px;color:var(--ink)}
+.amp{color:var(--butter-deep)}
+.details{font-family:var(--serif);font-size:19px;display:flex;flex-direction:column;gap:2px;margin-top:14px}
+.details strong{font-weight:600}
+.intro{max-width:560px;margin:22px auto 0;font-family:var(--serif);font-size:18px;font-style:italic;color:var(--muted);text-wrap:balance}
+
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.progress{display:flex;align-items:center;gap:10px;font-size:14px;min-width:0;flex:1 1 220px}
+.track{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden;max-width:220px}
+.fill{height:100%;background:var(--butter-deep);border-radius:99px;transition:width .4s}
+.filters{display:flex;gap:6px}
+.chip{border:1px solid var(--line);background:var(--paper);color:var(--ink);font:600 13px var(--sans);padding:6px 14px;border-radius:99px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+section{margin-top:32px}
+h2{font-family:var(--serif);font-weight:600;font-size:24px;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.item{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;transition:background .3s}
+.item .name{font-weight:700}
+.item .note{font-size:13px;color:var(--muted)}
+.item button{align-self:flex-start;border:0;background:var(--butter);color:var(--ink);font:700 13px var(--sans);padding:8px 14px;border-radius:99px;cursor:pointer}
+.item button:hover{background:var(--butter-deep)}
+.item button:focus-visible,.chip:focus-visible,.modal button:focus-visible{outline:2px solid var(--sage);outline-offset:2px}
+.item.taken{background:var(--taken)}
+.item.taken .name{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--butter-deep)}
+.badge{align-self:flex-start;font-size:13px;font-weight:600;color:var(--sage);display:flex;gap:6px;align-items:center}
+.item.mine{border-color:var(--butter-deep)}
+.undo{background:none!important;padding:0!important;color:var(--muted)!important;text-decoration:underline;font-weight:600!important}
+
+.overlay{position:fixed;inset:0;background:rgba(94,82,64,.35);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal{background:var(--paper);border-radius:18px;padding:24px;width:100%;max-width:380px;box-shadow:0 20px 50px rgba(94,82,64,.25)}
+.modal h3{font-family:var(--serif);font-size:24px;margin:0 0 4px}
+.modal p{margin:0 0 16px;color:var(--muted)}
+.modal label{font-weight:700;font-size:13px}
+.modal input{width:100%;margin-top:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:15px var(--sans);color:var(--ink);background:var(--bg)}
+.modal .err{color:#B5603F;font-size:13px;margin-top:6px}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.actions button{border:0;border-radius:99px;padding:9px 16px;font:700 14px var(--sans);cursor:pointer}
+.ghost{background:transparent;color:var(--muted)}
+.primary{background:var(--ink);color:var(--bg)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;z-index:30;max-width:calc(100% - 32px);text-align:center}
+footer{text-align:center;margin-top:48px;font-family:var(--serif);font-size:18px;color:var(--muted)}
+footer{position:relative}footer .ff{width:110px;display:inline-block;transform:rotate(-30deg)}footer .ff.r{transform:scaleX(-1) rotate(-30deg)}footer .sig{font-family:var(--script);font-size:34px;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="fl tl" viewBox="0 0 270 250" aria-hidden="true"><use href="#bouquet"/></svg>
+  <svg class="fl tr" viewBox="0 0 270 250" aria-hidden="true"><use href="#bouquet"/></svg>
+  <svg class="fl bl" viewBox="0 0 270 250" aria-hidden="true"><use href="#bouquet"/></svg>
+  <svg class="fl br" viewBox="0 0 270 250" aria-hidden="true"><use href="#bouquet"/></svg>
+  <div class="eyebrow">Chá de Panela</div>
+  <h1>Paula <span class="amp">&amp;</span> Kathleen</h1>
+  <div class="details">
+    <span><strong>Domingo, 18 de outubro</strong> · às 13h</span>
+    <span>Quadra 203, Conjunto 09, Casa 05 · Recanto das Emas</span>
+  </div>
+  <p class="intro">Ter você ao nosso lado já é o presente mais bonito. Se desejar nos presentear, separamos com carinho algumas ideias para o nosso novo lar. Ao escolher a sua, deixe seu nome para que ela fique guardada só para você.</p>
+</header>
+
+<div class="wrap">
+  <div class="bar">
+    <div class="progress"><span id="count"></span><div class="track"><div class="fill" id="fill"></div></div></div>
+    <div class="filters" role="group" aria-label="Filtrar presentes">
+      <button class="chip" data-f="all" aria-pressed="true">Todos</button>
+      <button class="chip" data-f="free" aria-pressed="false">Disponíveis</button>
+    </div>
+  </div>
+  <main id="list"></main>
+  <footer><svg class="ff" viewBox="0 0 270 250" aria-hidden="true"><use href="#bouquet"/></svg><svg class="ff r" viewBox="0 0 270 250" aria-hidden="true"><use href="#bouquet"/></svg><div>Com carinho,</div><div class="sig">Paula &amp; Kathleen</div></footer>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <form class="modal" id="form" novalidate>
+    <h3 id="m-title">Reservar presente</h3>
+    <p id="m-item"></p>
+    <label for="guest">Seu nome</label>
+    <input id="guest" autocomplete="name" placeholder="Ex.: Tia Marta">
+    <div class="err" id="err" hidden>Escreva seu nome para reservar.</div>
+    <div class="actions">
+      <button type="button" class="ghost" id="cancel">Cancelar</button>
+      <button type="submit" class="primary">Confirmar presente</button>
+    </div>
+  </form>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+ <filter id="wc" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="6"/><feGaussianBlur stdDeviation=".5"/></filter>
+ <radialGradient id="ry" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#F3CF66"/><stop offset=".55" stop-color="#F9E19A"/><stop offset="1" stop-color="#FDF0C6"/></radialGradient>
+ <radialGradient id="rw" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#F6EBD0"/><stop offset=".6" stop-color="#FFFBF1"/><stop offset="1" stop-color="#FFFFFF"/></radialGradient>
+ <g id="rose"><circle r="30" fill="url(#ry)"/>
+  <path d="M-18-6C-14-22 14-24 19-8M-12 10C-20-6-6-18 6-14M12 12C20 0 10-14-2-10M-4 4C-8-6 6-8 6 0C6 6-2 8-4 4" fill="none" stroke="#E0B544" stroke-width="2" stroke-linecap="round" opacity=".75"/></g>
+ <g id="wrose"><circle r="26" fill="url(#rw)" stroke="#EFE2BF"/>
+  <path d="M-15-5C-12-19 12-21 16-7M-10 9C-17-5-5-15 5-12M10 10C17 0 8-12-2-9M-3 3C-7-5 5-7 5 0" fill="none" stroke="#E2D2A6" stroke-width="1.8" stroke-linecap="round"/></g>
+ <g id="daisy"><g fill="#FFFFFF" stroke="#EFE3C4" stroke-width="1">
+  <ellipse rx="5" ry="14" transform="translate(0 -12)"/><ellipse rx="5" ry="14" transform="rotate(40) translate(0 -12)"/><ellipse rx="5" ry="14" transform="rotate(80) translate(0 -12)"/><ellipse rx="5" ry="14" transform="rotate(120) translate(0 -12)"/><ellipse rx="5" ry="14" transform="rotate(160) translate(0 -12)"/><ellipse rx="5" ry="14" transform="rotate(200) translate(0 -12)"/><ellipse rx="5" ry="14" transform="rotate(240) translate(0 -12)"/><ellipse rx="5" ry="14" transform="rotate(280) translate(0 -12)"/><ellipse rx="5" ry="14" transform="rotate(320) translate(0 -12)"/></g>
+  <circle r="7" fill="#EBC453"/></g>
+ <path id="leaf" d="M0 0C10-10 30-12 44 0C30 12 10 10 0 0Z"/>
+ <g id="spray"><path d="M0 0C6-20 4-40 0-60" stroke="#B5C2A0" stroke-width="1.5" fill="none"/>
+  <circle cx="1" cy="-60" r="3.4" fill="#F4D77E"/><circle cx="5" cy="-48" r="3" fill="#F7E19E"/><circle cx="-3" cy="-40" r="3" fill="#F4D77E"/><circle cx="5" cy="-30" r="2.6" fill="#F7E19E"/><circle cx="-2" cy="-20" r="2.4" fill="#F4D77E"/></g>
+ <g id="bouquet" filter="url(#wc)">
+  <path d="M20 30C80 70 140 110 200 190M60 20C110 60 150 70 260 90M30 80C70 120 90 160 110 230" stroke="#AFBE98" stroke-width="2.2" fill="none"/>
+  <use href="#leaf" fill="#C6D2B2" transform="translate(120 80) rotate(30) scale(1.1)"/>
+  <use href="#leaf" fill="#B3C29C" transform="translate(150 140) rotate(70)"/>
+  <use href="#leaf" fill="#CBD6B9" transform="translate(190 82) rotate(-10) scale(.9)"/>
+  <use href="#leaf" fill="#B3C29C" transform="translate(70 130) rotate(100) scale(1.05)"/>
+  <use href="#leaf" fill="#D3DCC3" transform="translate(220 86) rotate(15) scale(.7)"/>
+  <use href="#leaf" fill="#C6D2B2" transform="translate(95 190) rotate(85) scale(.8)"/>
+  <use href="#leaf" fill="#B3C29C" transform="translate(40 40) rotate(-60) scale(.9)"/>
+  <use href="#spray" transform="translate(240 92) rotate(70)"/>
+  <use href="#spray" transform="translate(185 175) rotate(150)"/>
+  <use href="#spray" transform="translate(110 225) rotate(170) scale(.8)"/>
+  <use href="#rose" transform="translate(72 60) scale(1.5)"/>
+  <use href="#wrose" transform="translate(140 52) scale(1.05)"/>
+  <use href="#daisy" transform="translate(40 125) scale(1.1)"/>
+  <use href="#rose" transform="translate(118 118) scale(.85)"/>
+  <use href="#daisy" transform="translate(190 120) scale(.8)"/>
+  <use href="#wrose" transform="translate(70 172) scale(.8)"/>
+  <circle cx="210" cy="60" r="5" fill="#F7E19E"/><circle cx="160" cy="165" r="4" fill="#F4D77E"/><circle cx="20" cy="170" r="4" fill="#F7E19E"/>
+ </g>
+</defs></svg>
+
+<script>
+// Itens de exemplo. Alguns já aparecem reservados para mostrar como fica.
+const items = [
+  ["Cozinha", "Jogo de panelas antiaderente", "5 peças", "Ana Clara"],
+  ["Cozinha", "Panela de pressão", "4,5 litros", null],
+  ["Cozinha", "Frigideira grande", "28 cm", null],
+  ["Cozinha", "Jogo de facas com cepo", "", "Tio Roberto"],
+  ["Cozinha", "Tábua de corte de bambu", "", null],
+  ["Cozinha", "Kit utensílios de silicone", "Espátula, concha, pegador", null],
+  ["Cozinha", "Escorredor de macarrão", "", null],
+  ["Cozinha", "Jogo de assadeiras", "Vidro ou alumínio", null],
+  ["Cozinha", "Potes herméticos", "Kit com 10", "Juliana"],
+  ["Cozinha", "Abridor, descascador e ralador", "", null],
+  ["Mesa", "Aparelho de jantar", "20 peças", null],
+  ["Mesa", "Faqueiro", "24 peças", "Família Souza"],
+  ["Mesa", "Jogo de copos", "6 unidades", null],
+  ["Mesa", "Taças de vinho", "6 unidades", null],
+  ["Mesa", "Jarra de vidro", "", null],
+  ["Mesa", "Jogo americano", "4 lugares", null],
+  ["Mesa", "Toalha de mesa", "Retangular, 6 lugares", null],
+  ["Mesa", "Garrafa térmica", "1 litro", null],
+  ["Eletros", "Liquidificador", "", null],
+  ["Eletros", "Air fryer", "", "Padrinhos"],
+  ["Eletros", "Sanduicheira", "", null],
+  ["Eletros", "Batedeira", "", null],
+  ["Eletros", "Cafeteira", "", null],
+  ["Casa", "Jogo de panos de prato", "", null],
+  ["Casa", "Jogo de toalhas de banho", "", null],
+  ["Casa", "Lixeira de pia", "", null],
+].map(([room,name,note,by],i)=>({id:i,room,name,note,by,mine:false}));
+
+let filter="all", current=null;
+const $=s=>document.querySelector(s);
+
+function render(){
+  const taken=items.filter(i=>i.by).length;
+  $("#count").textContent=`${taken} de ${items.length} presentes escolhidos`;
+  $("#fill").style.width=(taken/items.length*100)+"%";
+  const rooms=[...new Set(items.map(i=>i.room))];
+  const list=$("#list"); list.textContent="";
+  rooms.forEach(room=>{
+    const group=items.filter(i=>i.room===room && (filter==="all"||!i.by));
+    if(!group.length) return;
+    const sec=document.createElement("section");
+    const h=document.createElement("h2"); h.innerHTML='<svg width="30" height="30" viewBox="-30 -30 60 60" aria-hidden="true"><use href="#daisy"/></svg>'; h.append(room); sec.append(h);
+    const grid=document.createElement("div"); grid.className="grid";
+    group.forEach(it=>{
+      const card=document.createElement("div");
+      card.className="item"+(it.by?" taken":"")+(it.mine?" mine":"");
+      const n=document.createElement("div"); n.className="name"; n.textContent=it.name;
+      card.append(n);
+      if(it.note){const no=document.createElement("div");no.className="note";no.textContent=it.note;card.append(no);}
+      if(it.by){
+        const b=document.createElement("div"); b.className="badge";
+        b.textContent=`✓ Reservado por ${it.by}`; card.append(b);
+        if(it.mine){const u=document.createElement("button");u.className="undo";u.textContent="Desfazer minha reserva";
+          u.onclick=()=>{it.by=null;it.mine=false;render();toast("Reserva desfeita.");};card.append(u);}
+      }else{
+        const btn=document.createElement("button"); btn.textContent="Quero dar este";
+        btn.onclick=()=>open(it); card.append(btn);
+      }
+      grid.append(card);
+    });
+    sec.append(grid); list.append(sec);
+  });
+}
+function open(it){current=it;$("#m-item").textContent=it.name+(it.note?` · ${it.note}`:"");
+  $("#err").hidden=true;$("#guest").value="";$("#overlay").hidden=false;setTimeout(()=>$("#guest").focus(),30);}
+function close(){$("#overlay").hidden=true;current=null;}
+$("#cancel").onclick=close;
+$("#overlay").addEventListener("click",e=>{if(e.target.id==="overlay")close();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+$("#form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("#guest").value.trim();
+  if(!name){$("#err").hidden=false;return;}
+  if(current.by){close();toast("Ops, alguém acabou de escolher este item.");render();return;}
+  current.by=name;current.mine=true;const n=current.name;close();render();
+  toast(`Obrigada, ${name}! “${n}” está reservado para você.`);
+});
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+  filter=c.dataset.f;document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===c));render();});
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,3200);}
+render();
+</script>
+</body>
+</html>
